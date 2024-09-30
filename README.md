@@ -51,7 +51,7 @@ Make sure you have the following installed on your machine:
 
 ```bash
 git clone https://github.com/Ari220600/iphone-15-pro-clone.git
-cd iphone-doc
+cd iphone-15-pro-clone
 ```
 
 **Installation**
