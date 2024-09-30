@@ -3,7 +3,7 @@ import { footerLinks } from '../constants'
 
 const Footer = () => {
   return (
-    <footer className="py-5 sm:px-10 px-5">
+    <footer className="py-5 sm:px-10 px-5 ">
       <div className="screen-max-width">
         <div>
           <p className="font-semibold text-gray text-xs">
@@ -28,8 +28,8 @@ const Footer = () => {
           <p className="font-semibold text-gray text-xs">Copright @ 2024 Apple Inc. All rights reserved.</p>
           <div className="flex">
             {footerLinks.map((link, i) => (
-              <p key={link} className="font-semibold text-gray text-xs cursor-pointer">
-                {link}{' '}
+              <p key={link} className="font-semibold text-gray text-xs cursor-pointer  flex">
+                <p className='hover:text-white'>{link}</p>{' '}
                 {i !== footerLinks.length - 1 && (
                   <span className="mx-2"> | </span>
                 )}
