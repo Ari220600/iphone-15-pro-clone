@@ -1,4 +1,3 @@
-
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/all";
@@ -23,50 +22,60 @@ const VideoCarousel = () => {
 
   const [loadedData, setLoadedData] = useState([]);
   const { isEnd, isLastVideo, startPlay, videoId, isPlaying } = video;
-  const scrollRef=useRef()
-  useGSAP(()=>{
-    console.log(window.screen.width);
-    
-    const boxes=gsap.utils.toArray(scrollRef.current.children)
-    boxes.forEach(box => {
-      if(window.screen.width>760){gsap.to(box,{
-        y: (8/10)*window.screen.height,
-        // opacity: 1,
-        scrollTrigger:{
-          trigger:box,
-        //   end:'bottom ,bottom',
-        //   start:'top ,30%',
-          scrub:true,
-          
-        },
-        ease:'sine.inOut'
+  const scrollRef = useRef();
+  useGSAP(
+    () => {
+      console.log(window.screen.width);
 
-      })}
-      else{gsap.to(box,{
-        y: (4/10)*window.screen.height,
-        // opacity: 1,
-        scrollTrigger:{
-          trigger:box,
-          end:'bottom ,bottom',
-          start:'top ,30%',
-          scrub:true,
-          
-        },
-        ease:'sine.inOut'
-
-      })}
-    })
-    
-  },{scope: scrollRef})
-
+      const boxes = gsap.utils.toArray(scrollRef.current.children);
+      boxes.forEach((box) => {
+        if (window.screen.width > 760) {
+          gsap.to(box, {
+            y: (7 / 10) * window.screen.height,
+            // opacity: 1,
+            scrollTrigger: {
+              trigger: box,
+              //   end:'bottom ,bottom',
+              //   start:'top ,30%',
+              scrub: true,
+            },
+            ease: "sine.inOut",
+          });
+        } else if (window.screen.width < 1000) {
+          gsap.to(box, {
+            y: (4 / 10) * window.screen.height,
+            // opacity: 1,
+            scrollTrigger: {
+              trigger: box,
+              end: "bottom 80%",
+              start: "top 70%",
+              scrub: true,
+            },
+            ease: "sine.inOut",
+          });
+        } else {
+          gsap.to(box, {
+            y: (4 / 10) * window.screen.height,
+            // opacity: 1,
+            scrollTrigger: {
+              trigger: box,
+              end: "bottom 50%",
+              start: "top 70%",
+              scrub: true,
+            },
+            ease: "sine.inOut",
+          });
+        }
+      });
+    },
+    { scope: scrollRef }
+  );
 
   useGSAP(() => {
-
-
     gsap.to("#slider", {
       transform: `translateX(${-100 * videoId}%)`,
       duration: 2,
-      ease: "power2.inOut", 
+      ease: "power2.inOut",
     });
 
     gsap.to("#video", {
@@ -99,10 +108,10 @@ const VideoCarousel = () => {
             gsap.to(videoDivRef.current[videoId], {
               width:
                 window.innerWidth < 760
-                  ? "10vw" 
+                  ? "10vw"
                   : window.innerWidth < 1200
-                  ? "10vw" 
-                  : "4vw", 
+                    ? "10vw"
+                    : "4vw",
             });
 
             gsap.to(span[videoId], {
@@ -183,80 +192,78 @@ const VideoCarousel = () => {
 
   return (
     <>
-
-     <div>
-     <div className="z-10 flex-center mt-10 bruh" ref={scrollRef}>
-        <div className="z-10  flex-center py-5 px-7 bg-gray-300 backdrop-blur rounded-full">
-          {videoRef.current.map((_, i) => (
-            <span
-              key={i}
-              className="mx-2 w-3 h-3 bg-gray-200 rounded-full relative cursor-pointer"
-              ref={(el) => (videoDivRef.current[i] = el)}
-            >
+      <div>
+        <div className="z-10 flex-center mt-10 bruh" ref={scrollRef}>
+          <div className="z-10  flex-center py-5 px-7 bg-gray-300 backdrop-blur rounded-full">
+            {videoRef.current.map((_, i) => (
               <span
-                className="absolute h-full w-full rounded-full"
-                ref={(el) => (videoSpanRef.current[i] = el)}
-              />
-            </span>
-          ))}
+                key={i}
+                className="mx-2 w-3 h-3 bg-gray-200 rounded-full relative cursor-pointer"
+                ref={(el) => (videoDivRef.current[i] = el)}
+              >
+                <span
+                  className="absolute h-full w-full rounded-full"
+                  ref={(el) => (videoSpanRef.current[i] = el)}
+                />
+              </span>
+            ))}
+          </div>
+
+          <button className="z-10 control-btn fixe ">
+            <img
+              src={isLastVideo ? replayImg : !isPlaying ? playImg : pauseImg}
+              alt={isLastVideo ? "replay" : !isPlaying ? "play" : "pause"}
+              onClick={
+                isLastVideo
+                  ? () => handleProcess("video-reset")
+                  : !isPlaying
+                    ? () => handleProcess("play")
+                    : () => handleProcess("pause")
+              }
+            />
+          </button>
         </div>
 
-        <button className="z-10 control-btn fixe ">
-          <img
-            src={isLastVideo ? replayImg : !isPlaying ? playImg : pauseImg}
-            alt={isLastVideo ? "replay" : !isPlaying ? "play" : "pause"}
-            onClick={
-              isLastVideo
-                ? () => handleProcess("video-reset")
-                : !isPlaying
-                ? () => handleProcess("play")
-                : () => handleProcess("pause")
-            }
-          />
-        </button>
-      </div>
-     
-      <div className="flex items-center">
-        {hightlightsSlides.map((list, i) => (
-          <div key={list.id} id="slider" className="sm:pr-20 pr-10">
-            <div className="video-carousel_container">
-              <div className="w-full h-full flex-center rounded-3xl overflow-hidden bg-black">
-                <video
-                  id="video"
-                  playsInline={true}
-                  className={`${
-                    list.id === 2 && "translate-x-44"
-                  } pointer-events-none`}
-                  preload="auto"
-                  muted
-                  ref={(el) => (videoRef.current[i] = el)}
-                  onEnded={() =>
-                    i !== 3
-                      ? handleProcess("video-end", i)
-                      : handleProcess("video-last")
-                  }
-                  onPlay={() =>
-                    setVideo((pre) => ({ ...pre, isPlaying: true }))
-                  }
-                  onLoadedMetadata={(e) => handleLoadedMetaData(i, e)}
-                >
-                  <source src={list.video} type="video/mp4" />
-                </video>
-              </div>
+        <div className="flex items-center">
+          {hightlightsSlides.map((list, i) => (
+            <div key={list.id} id="slider" className="sm:pr-20 pr-10">
+              <div className="video-carousel_container">
+                <div className="w-full h-full flex-center rounded-3xl overflow-hidden bg-black">
+                  <video
+                    id="video"
+                    playsInline={true}
+                    className={`${
+                      list.id === 2 && "translate-x-44"
+                    } pointer-events-none`}
+                    preload="auto"
+                    muted
+                    ref={(el) => (videoRef.current[i] = el)}
+                    onEnded={() =>
+                      i !== 3
+                        ? handleProcess("video-end", i)
+                        : handleProcess("video-last")
+                    }
+                    onPlay={() =>
+                      setVideo((pre) => ({ ...pre, isPlaying: true }))
+                    }
+                    onLoadedMetadata={(e) => handleLoadedMetaData(i, e)}
+                  >
+                    <source src={list.video} type="video/mp4" />
+                  </video>
+                </div>
 
-              <div className="absolute top-12 left-[5%] z-10">
-                {list.textLists.map((text, i) => (
-                  <p key={i} className="md:text-2xl text-xl font-medium">
-                    {text}
-                  </p>
-                ))}
+                <div className="absolute top-12 left-[5%] z-10">
+                  {list.textLists.map((text, i) => (
+                    <p key={i} className="md:text-2xl text-xl font-medium">
+                      {text}
+                    </p>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-      </div>
-      
     </>
   );
 };
